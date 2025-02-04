@@ -45,3 +45,19 @@ A web application designed to manage theater schedules, integrating with Google 
    - Printable schedules.
    - Clear visualization of events.
 3. Communication with the backend via RESTful APIs.
+
+---
+
+### Environment Variables
+Create a `.env` file in the root directory with the following structure:
+```env
+# Database configuration
+DATABASE_HOST=postgres
+DATABASE_PORT=5432
+DATABASE_USER=postgres
+DATABASE_PASSWORD=yourpassword
+DATABASE_NAME=celedb
+
+# Backend configuration
+NODE_ENV=development
+PORT=3001
