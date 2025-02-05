@@ -5,10 +5,10 @@ A web application designed to manage theater schedules, integrating with Google 
 ## Features
 - Synchronize events with Google Calendar, including detection of changes, additions, and deletions.
 - Manage events with detailed attributes, such as:
-  - Show time.
+  - Event time.
   - Arrival time for technicians and workers (facchini).
   - Number of workers for setup and teardown.
-  - Technicians assigned to setup, show, and teardown with specific roles (stagehand, electrician, sound engineer).
+  - Technicians assigned to setup, event, and teardown with specific roles (stagehand, electrician, sound engineer).
   - Notes for additional details.
 - Backend developed with Node.js and Express.js.
 - Dockerized environment for easy deployment.
@@ -32,10 +32,10 @@ A web application designed to manage theater schedules, integrating with Google 
    - Support for events not present in Google Calendar (local-only).
 3. Database integration for event persistence (PostgreSQL):
    - Event attributes to store:
-     - **Show time**.
+     - **Event time**.
      - **Arrival time for workers and technicians**.
      - **Number of workers for setup and teardown**.
-     - **Technicians assigned to setup, show, and teardown**, with roles (stagehand, electrician, sound engineer).
+     - **Technicians assigned to setup, event, and teardown**, with roles (stagehand, electrician, sound engineer).
      - **Additional notes**.
 
 ### Frontend Requirements
