@@ -1,0 +1,203 @@
+openapi: 3.0.3
+info:
+  title: CelePlanner API
+  version: "1.0"
+servers:
+  - url: http://localhost:8088
+paths:
+  /auth/login:
+    post:
+      summary: Login (sets cookie)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+              required: [email, password]
+      responses:
+        "200": { description: OK }
+        "400": { description: Invalid credentials }
+  /auth/logout:
+    post:
+      summary: Logout (invalidate session)
+      responses:
+        "200": { description: OK }
+  /api/events:
+    get:
+      summary: List events
+      parameters:
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+        - in: query
+          name: includeCancelled
+          schema: { type: boolean, default: false }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event_id: { type: string, format: uuid }
+                    event_date: { type: string, format: date }
+                    title: { type: string }
+                    status: { type: string, enum: [confirmed,cancelled] }
+                    first_show_time: { type: string, example: "21:00" }
+  /api/events/{event_id}:
+    get:
+      summary: Get event detail
+      parameters:
+        - in: path
+          name: event_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ev: { type: object }
+                  show_times:
+                    type: array
+                    items: { type: string, example: "16:00" }
+                  show_stage_managers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idx: { type: integer }
+                        person:
+                          type: object
+                          properties:
+                            person_id: { type: string, format: uuid }
+                            name: { type: string }
+                            internal: { type: boolean }
+                  phase_times:
+                    type: array
+                    items: { type: object }
+                  staff:
+                    type: array
+                    items: { type: object }
+                  attachments:
+                    type: array
+                    items: { type: object }
+    patch:
+      summary: Update event (editor)
+      parameters:
+        - in: path
+          name: event_id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                notes: { type: string }
+                show_times:
+                  type: array
+                  items: { type: string, example: "21:00" }
+                show_stage_managers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      idx: { type: integer }
+                      person_id: { type: string, format: uuid }
+                phase_times:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      phase: { type: string, enum: [setup,show,teardown] }
+                      tech_call_time: { type: string, example: "09:30" }
+                      loaders_call_time: { type: string, example: "08:00" }
+                      loaders_quantity: { type: integer, default: 0 }
+                staff:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      phase: { type: string, enum: [setup,show,teardown] }
+                      role: { type: string, enum: [stagehand,electrician,sound] }
+                      person_ids:
+                        type: array
+                        items: { type: string, format: uuid }
+      responses:
+        "204": { description: No content }
+        "400": { description: Validation error }
+  /api/persons:
+    get:
+      summary: List persons
+      responses:
+        "200": { description: OK }
+    post:
+      summary: Create person (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+                email: { type: string }
+                internal: { type: boolean }
+      responses:
+        "200": { description: OK }
+  /api/events/{event_id}/attachments:
+    post:
+      summary: Upload attachment (editor)
+      parameters:
+        - in: path
+          name: event_id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                kind:
+                  type: string
+                  enum: [image,video,doc,other]
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200": { description: OK }
+  /api/attachments/{attachment_id}:
+    delete:
+      summary: Delete attachment (editor)
+      parameters:
+        - in: path
+          name: attachment_id
+          required: true
+          schema: { type: integer }
+      responses:
+        "204": { description: No content }
+  /healthz:
+    get:
+      summary: Liveness probe
+      responses:
+        "200": { description: OK }
