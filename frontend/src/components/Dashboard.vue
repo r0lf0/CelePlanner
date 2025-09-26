@@ -3,5 +3,5 @@
 </script>
 
 <template>
-  <h1>Test page</h1>
+  <h1 class="bg-blue-500">Test page</h1>
 </template>
