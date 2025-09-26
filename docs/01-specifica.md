@@ -11,7 +11,7 @@
 ## 2) Assunzioni operative
 - Eventi utili su Google Calendar sono tutti **all-day** (gli altri ignorati).
 - Possono esistere più eventi nella stessa `event_date` (anche cancellati/nuovi nello stesso giorno).
-- Ogni evento può avere **1..N showtimes** nello stesso giorno.
+- Ogni evento può avere **0..N showtimes** nello stesso giorno.
 - Montaggio e smontaggio sono **unici** per evento (non per showtime).
 - Il sistema è **resiliente ai riavvii** e recupera delta via `syncToken`.
 
@@ -21,11 +21,11 @@
 - Stage manager (responsabile di palcoscenico): **solo interni**; può anche ricoprire ruoli tecnici.
 
 ## 4) Modello dati (relazionale)
-DB: PostgreSQL. Allegati su filesystem.
+DB: PostgreSQL. Allegati su filesystem con gerarchia sensata, accessibili anche da fuori app.
 
 ### 4.1 Tabelle
 - **events**: evento all-day (giorno di teatro). `event_id` (UUID PK), `gcal_id` (UNIQUE), `event_date`, `title`, `location?`, `description?`, `status` (`confirmed|cancelled`), `notes?`, `created_utc`, `updated_utc`.
-- **event_showtimes**: 1..N spettacoli per evento. PK (`event_id`,`idx`), `show_time` (TIME).
+- **event_showtimes**: 0..N spettacoli per evento. PK (`event_id`,`idx`), `show_time` (TIME).
 - **event_show_stage_managers**: SM per singolo spettacolo. PK (`event_id`,`idx`), `person_id` (FK → persons). Regola: `persons.internal = true`.
 - **event_phase_times**: convocazioni per fase (uniche per evento): `phase` in (`setup|show|teardown`), `tech_call_time?`; per `setup|teardown` anche `loaders_call_time?` e `loaders_quantity`.
 - **persons**: anagrafica tecnici: `name`, `email?`, `internal` (BOOL), `note?`.
