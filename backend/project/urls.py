@@ -22,6 +22,6 @@ urlpatterns = [
     path("api/v1/", include("celeplanner.urls")),
     path("admin/", admin.site.urls),
     # Djoser URLs
-    path("auth/", include("djoser.urls")),
-    path("auth/", include("djoser.urls.jwt")),
+    path("api/v1/auth/", include("djoser.urls")),
+    path("api/v1/auth/", include("djoser.urls.jwt")),
 ]
