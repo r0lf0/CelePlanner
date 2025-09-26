@@ -1,6 +1,6 @@
 export interface CelePlannerEvent {
   id: string;
-  eventDate: string;
+  eventDate: Date;
   title: string;
   description: string;
 }

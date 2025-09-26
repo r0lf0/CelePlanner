@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Toaster } from 'vue-sonner';
-import Dashboard from './components/Dashboard.vue'
+import CalendarView from './components/CalendarView.vue'
 
 
 import { useAuthStore } from "@/stores/auth";
@@ -15,6 +15,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <Dashboard />
+  <CalendarView />
   <Toaster />
 </template>
